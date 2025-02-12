@@ -1,27 +1,14 @@
-import { Route, Routes } from "react-router";
-import Profile from "./pages/profile/Profile";
-import Login from "./pages/login/Login";
-import Home from "./pages/home/Home";
-import { lazy, Suspense } from "react";
-
-const ProfileMenu = lazy(() => import("./pages/profile/Profile"));
+import { Provider } from "react-redux";
+import { AppRoutes } from "./routes";
+import { persistor, store } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-
-        <Route
-          path="/profile"
-          element={
-            <Suspense fallback={<h1>Loading...</h1>}>
-              <ProfileMenu />{" "}
-            </Suspense>
-          }
-        />
-      </Routes>
-    </>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <AppRoutes />
+      </PersistGate>
+    </Provider>
   );
 }
 

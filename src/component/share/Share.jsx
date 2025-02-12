@@ -4,17 +4,16 @@ import PermMediaIcon from "@mui/icons-material/PermMedia";
 import LabelIcon from "@mui/icons-material/Label";
 import RoomIcon from "@mui/icons-material/Room";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import { useSelector } from "react-redux";
 
 export default function Share() {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const { profilePicture } = useSelector((state) => state.user.data);
   return (
     <div className="share">
       <div className="shareWrapper">
         <div className="shareTop">
-          <img
-            className="shareProfileImg"
-            src="./assets/person(1).jpg"
-            alt=""
-          />
+          <img className="shareProfileImg" src={PF + profilePicture} alt="" />
           <input
             placeholder="What's in your mind Safak?"
             className="shareInput"
