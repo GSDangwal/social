@@ -1,15 +1,26 @@
-import React, { useState } from "react";
-import { Users } from "../../dummyData";
+import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import "./post.css";
+import axios from "axios";
+import moment from "moment";
 
-export default function Post({ post }) {
-  const [like, setLike] = useState(post.like);
-  const [isLiked, setIsLiked] = useState(false);
-  const likeHandler = () => {
-    setLike(isLiked ? like - 1 : like + 1);
-    setIsLiked(!isLiked);
-  };
+export default function Post({ post, onLike }) {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  const [user, setUser] = useState("");
+
+  //fetch the current user based on post userId
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`users/${post.userId}`);
+        setUser(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+  }, [post.userId]);
 
   return (
     <div className="post">
@@ -18,13 +29,11 @@ export default function Post({ post }) {
           <div className="postTopLeft">
             <img
               className="postProfileImg"
-              src={Users.filter((u) => u.id === post?.userId)[0].profilePicture}
+              src={user.profilePicture || PF + "blank-profile-picture.png"}
               alt=""
             />
-            <span className="postUsername">
-              {Users.filter((u) => u.id === post?.userId)[0].username}
-            </span>
-            <span className="postDate">{post.date}</span>
+            <span className="postUsername">{user.username}</span>
+            <span className="postDate">{moment(post.createdAt).fromNow()}</span>
           </div>
           <div className="postTopRight">
             <MoreVertIcon />
@@ -32,23 +41,25 @@ export default function Post({ post }) {
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
-          <img className="postImg" src={post.photo} alt="" />
+          <img className="postImg" src={PF + post.img} alt="" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
             <img
               className="likeIcon"
               src="assets/like.png"
-              onClick={likeHandler}
+              onClick={() => onLike(user._id, post._id)}
               alt=""
             />
             <img
               className="likeIcon"
               src="assets/heart.png"
-              onClick={likeHandler}
+              onClick={() => onLike(user._id, post._id)}
               alt=""
             />
-            <span className="postLikeCounter">{like} people like it</span>
+            <span className="postLikeCounter">
+              {post.likes.length} people like it
+            </span>
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">{post.comment} comments</span>
