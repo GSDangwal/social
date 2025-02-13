@@ -6,6 +6,7 @@ import Login from "../pages/login/Login";
 import Sidebar from "../component/sidebar/Sidebar";
 import { DashboardLayout } from "../layout/dashboard/DashboardLayout";
 import { AuthLayout } from "../layout/auth/AuthLayout";
+import Register from "../pages/register/Register";
 
 const ProfileMenu = lazy(() => import("../pages/profile/Profile"));
 export const AppRoutes = () => {
@@ -14,6 +15,7 @@ export const AppRoutes = () => {
       {/* routes for auth page which does not have header, sidebar */}
       <Route element={<AuthLayout />}>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
 
       {/* routes for login user */}
