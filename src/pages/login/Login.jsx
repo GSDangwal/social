@@ -23,13 +23,14 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!isValidEmailId(data.Email) || data.Password.length < 6) {
-      if (!isValidEmailId(data.Email)) {
-        setIsError((prev) => ({ ...prev, emailError: "Invalid Email ID" }));
-      }
-      if (data.Password.length < 6) {
-        setIsError((prev) => ({ ...prev, passwordError: "Invalid Password" }));
-      }
+    const currentError = {};
+    if (!isValidEmailId(data.Email))
+      currentError.emailError = "Invalid Email ID";
+    if (data.Password.length < 6)
+      currentError.passwordError = "Invalid Password";
+
+    if (Object.keys(currentError).length) {
+      setIsError((prev) => ({ ...prev, ...currentError }));
       return;
     }
 
@@ -52,7 +53,11 @@ export default function Login() {
       setIsError((pre) => ({ ...pre, passwordError: "" }));
     }
   };
-  console.log(error);
+
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <div className="login">
       <div className="loginWrapper">
@@ -95,7 +100,7 @@ export default function Login() {
               </button>
             </form>
             <span className="loginForgot">Forgot Password?</span>
-            <button className="loginRegisterButton">
+            <button className="loginRegisterButton" onClick={handleRegister}>
               Create a New Account
             </button>
           </div>
